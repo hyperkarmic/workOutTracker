@@ -1,9 +1,8 @@
-//Express imported - and models imported
-const router = require("express");
+const router = require("express").Router();
 const Workout = require("../models/workout");
 
 //this retrieves last workout
-app.get("/api/workouts", (req, res) => {
+router.get("/api/workouts", (req, res) => {
   Workout.find()
     .then((data) => {
       res.json(data);
@@ -13,8 +12,20 @@ app.get("/api/workouts", (req, res) => {
     });
 });
 
+//range function route
+router.get("/api/workouts/range", (req, res) => {
+  Workout.find({})
+    .limit(5)
+    .then((data) => {
+      res.json(data);
+    })
+    .catch((err) => {
+      res.json(err);
+    });
+});
+
 //this creates a new workout
-app.post("/api/workouts", function (req, res) {
+router.post("/api/workouts", (req, res) => {
   Workout.create({})
     .then((data) => res.json(data))
     .catch((err) => {
@@ -23,14 +34,10 @@ app.post("/api/workouts", function (req, res) {
     });
 });
 
-app.put("/api/workouts/:id", (req, res) => {
-  Workout.findByIdAndUpdate(
-    params.id,
-    {
-      $push: { exercises: body },
-    },
-    (error, data)
-  )
+router.put("/api/workouts/:id", ({ body, params }, res) => {
+  Workout.findByIdAndUpdate(params.id, {
+    $push: { exercises: body },
+  })
     .then((data) => res.json(data))
     .catch((err) => {
       console.log("err", err);

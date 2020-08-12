@@ -1,8 +1,9 @@
 //dependencies - as outlined in package JSON
 
 const express = require("express");
-const morgan = require("morgan");
 const mongoose = require("mongoose");
+const logger = require("morgan");
+const path = require("path");
 
 //Express instance + port set up
 const app = express();
@@ -10,19 +11,18 @@ const PORT = process.env.PORT || 8000;
 
 //usual middleware + morgan application set up
 
-app.use(morgan("dev"));
+app.use(logger("dev"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static("public"));
+app.use(express.static(path.join(__dirname, "./public")));
+app.use(require("./routes/apiRoutes.js"));
+app.use(require("./routes/htmlRoutes.js"));
 
-// set up mongoose connection???
-//mongoose.connect(process.env.MONGODB_URI);
-//what about the || Heroku statement?
-
-//set up routes
-//require("./routes/api-routes.js");
-//require("./routes/html-routes.js");
-//does app need referencing in this block in someway?
+mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workout", {
+  useNewUrlParser: true,
+  useFindAndModify: false,
+});
 
 //set up listener
 app.listen(PORT, () => {

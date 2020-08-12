@@ -29,16 +29,16 @@ const workOutSchema = new Schema(
           required: "Please enter length of exercise session in minutes",
         },
         weight: {
-          type: number,
+          type: Number,
         },
         reps: {
-          type: number,
+          type: Number,
         },
         sets: {
-          type: number,
+          type: Number,
         },
         distance: {
-          type: number,
+          type: Number,
         },
       },
     ],
@@ -53,7 +53,7 @@ const workOutSchema = new Schema(
 
 //this adds a dynamically created 'totalDuration' section to schema
 
-workoutSchema.virtual("totalDuration").get(function () {
+workOutSchema.virtual("totalDuration").get(function () {
   //the total amount of time doing a particular exercise is condensed (from array) and returned.
   return this.exercises.reduce((total, exercise) => {
     return total + exercise.duration;
